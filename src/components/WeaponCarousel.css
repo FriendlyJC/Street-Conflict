@@ -1,0 +1,109 @@
+.weapon-carousel-container {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.weapon-carousel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+}
+
+.weapon-carousel:active {
+    cursor: grabbing;
+}
+
+.weapon-carousel-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weapon-carousel-item {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px;
+    transform-origin: center;
+}
+
+.weapon-image {
+    width: 80px;
+    height: 50px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.weapon-placeholder {
+    width: 80px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(50, 50, 50, 0.8);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 4px;
+}
+
+.weapon-name {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Selection indicator */
+.carousel-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.indicator-line {
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.5));
+}
+
+.indicator-line.right {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.5),
+            transparent);
+}
+
+.indicator-center {
+    width: 8px;
+    height: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 2px;
+    transform: rotate(45deg);
+    margin: 0 8px;
+}

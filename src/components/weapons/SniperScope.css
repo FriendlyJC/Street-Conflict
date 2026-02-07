@@ -1,0 +1,227 @@
+.sniper-scope-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: var(--z-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Zoom Display */
+.zoom-display {
+    position: absolute;
+    top: var(--spacing-lg);
+    left: var(--spacing-lg);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    font-family: var(--font-display);
+}
+
+/* Close Button */
+.scope-close-btn {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: #e74c3c;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Scope View */
+.scope-view {
+    position: relative;
+    width: 70vw;
+    height: 70vw;
+    max-width: 350px;
+    max-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Scope Ring */
+.scope-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow:
+        inset 0 0 50px rgba(0, 0, 0, 0.8),
+        0 0 0 5px rgba(0, 0, 0, 0.9);
+}
+
+/* Effective Radius */
+.effective-radius {
+    position: absolute;
+    border: 2px dashed rgba(255, 100, 100, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* Crosshair */
+.scope-crosshair {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.crosshair-h {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateY(-50%);
+}
+
+.crosshair-h::before,
+.crosshair-h::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.crosshair-h::before {
+    left: 25%;
+}
+
+.crosshair-h::after {
+    right: 25%;
+}
+
+.crosshair-v {
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    bottom: 15%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateX(-50%);
+}
+
+.crosshair-v::before,
+.crosshair-v::after {
+    content: '';
+    position: absolute;
+    left: -3px;
+    width: 7px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.crosshair-v::before {
+    top: 25%;
+}
+
+.crosshair-v::after {
+    bottom: 25%;
+}
+
+.crosshair-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: #e74c3c;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Zoom Slider */
+.zoom-slider-container {
+    position: absolute;
+    left: var(--spacing-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    height: 200px;
+}
+
+.zoom-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.zoom-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 150px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+.zoom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Shoot Button */
+.shoot-btn {
+    position: absolute;
+    bottom: var(--spacing-2xl);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.shoot-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.shoot-btn:active {
+    transform: translateX(-50%) scale(0.95);
+}
+
+.shoot-btn-inner {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Safe area */
+@supports (padding: env(safe-area-inset-top)) {
+
+    .zoom-display,
+    .scope-close-btn {
+        top: calc(var(--spacing-lg) + env(safe-area-inset-top));
+    }
+
+    .shoot-btn {
+        bottom: calc(var(--spacing-2xl) + env(safe-area-inset-bottom));
+    }
+}

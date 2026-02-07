@@ -1,0 +1,645 @@
+.game-page {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    overflow: hidden;
+}
+
+/* Camera container */
+.camera-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.camera-container.disabled {
+    background: #0a0a0a;
+}
+
+.camera-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    transform-origin: center;
+}
+
+.camera-feed.blurred {
+    filter: blur(3px);
+}
+
+/* Scope effects */
+.camera-feed.scope-blurred {
+    filter: blur(5px);
+}
+
+.camera-feed.scope-black {
+    filter: brightness(0);
+}
+
+/* Hidden video for canvas source */
+.camera-feed-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Scope view container */
+.scope-view {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sniper scope view: black background for performance */
+.sniper-scope-view {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    /* Pure black background, no video rendering needed */
+}
+
+/* Canvas for scope rendering */
+.scope-canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fixed circular container for scope zoom */
+.scope-zoom-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+
+    /* 
+     * 圓形裁切參數說明：
+     * clip-path: circle(半徑 at 水平位置 垂直位置);
+     * 
+     * 半徑調整：
+     * - min(30vh, 30vw) = 螢幕高度或寬度的 30%（取較小值）
+     * - 增大數字 = 圓形變大（例如 35vh, 40vw）
+     * - 減小數字 = 圓形變小（例如 25vh, 20vw）
+     * 
+     * 位置調整：
+     * - center center = 水平置中、垂直置中
+     * - center 55% = 水平置中、垂直往下移 5%
+     * - 45% center = 水平往左移 5%、垂直置中
+     */
+    clip-path: circle(min(30vh, 30vw) at center center);
+}
+
+/* Rifle Scope: 已重置為畫面中央，並增大口徑 (35) */
+.scope-zoom-container.scope-rifle {
+    clip-path: circle(min(33vh, 33vw) at center center);
+}
+
+/* Shotgun Scope: 已重置為置中 */
+/* .scope-zoom-container.scope-shotgun {
+    clip-path: circle(min(30vh, 30vw) at center 52%);
+} */
+
+/* Sniper Scope: 如需調整可取消註解 */
+/* .scope-zoom-container.scope-sniper {
+    clip-path: circle(min(35vh, 35vw) at center center);
+} */
+
+/* Zoomed layer for scope */
+.camera-feed-zoomed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center;
+}
+
+.camera-error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    color: #e74c3c;
+    font-size: 1rem;
+}
+
+.camera-off-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+.camera-off-text {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.camera-off-hint {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* Shoot flash effect */
+.shoot-flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0.8;
+    z-index: 1000;
+    pointer-events: none;
+    animation: flash 0.1s ease-out;
+}
+
+@keyframes flash {
+    from {
+        opacity: 0.8;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Top left controls - camera toggle */
+.top-left-controls {
+    position: absolute;
+    left: var(--spacing-lg);
+    top: var(--spacing-lg);
+    z-index: 100;
+}
+
+/* Left controls - camera toggle (legacy, keep for compatibility) */
+.left-controls {
+    position: absolute;
+    left: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-bottom: var(--spacing-md);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+.control-btn.active {
+    border-color: var(--color-accent-primary);
+    background: rgba(74, 124, 89, 0.3);
+}
+
+.control-btn.disabled {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.3);
+}
+
+.btn-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Top right controls */
+.top-right-controls {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 100;
+}
+
+.minimap-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Right side controls */
+.right-controls {
+    position: absolute;
+    right: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    z-index: 100;
+}
+
+/* Crosshair */
+.crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 50;
+}
+
+.crosshair-dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Aiming overlay */
+.aiming-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    /* pointer-events: none; */
+    /* Removed to allow focus toggle clicks */
+}
+
+.aiming-view {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.scope-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Sniper scope alignment - centered (only sniper scope) */
+.scope-image.scope-centered {
+    object-fit: contain;
+    object-position: center center;
+}
+
+/* All other scopes and iron sights - bottom aligned */
+.scope-image.scope-bottom {
+    object-fit: contain;
+    object-position: center bottom;
+}
+
+.scope-placeholder {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+}
+
+.zoom-control {
+    position: absolute;
+    left: var(--spacing-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    pointer-events: auto;
+    z-index: 70;
+}
+
+.zoom-label {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.zoom-slider {
+    -webkit-appearance: slider-vertical;
+    appearance: slider-vertical;
+    width: 6px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    outline: none;
+    writing-mode: bt-lr;
+}
+
+.zoom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.zoom-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Bottom controls */
+.bottom-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-md);
+    padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+}
+
+.weapon-section {
+    width: 100%;
+}
+
+.shoot-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.shoot-section.centered {
+    width: 100%;
+    justify-content: center;
+}
+
+.shoot-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.shoot-btn-inner {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+}
+
+.shoot-btn:active {
+    transform: scale(0.95);
+}
+
+.shoot-btn:active .shoot-btn-inner {
+    transform: scale(0.9);
+}
+
+/* Debug Test Button */
+.bottom-left-controls {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    left: var(--spacing-lg);
+    z-index: 1500;
+}
+
+.test-btn {
+    background: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.5);
+    color: #ffc107;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.test-btn:active {
+    background: rgba(255, 193, 7, 0.4);
+}
+
+/* Single Player HUD Styles */
+.top-hud {
+    position: absolute;
+    top: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--spacing-md);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.game-timer,
+.game-score {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-size: 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 100px;
+    text-align: center;
+}
+
+.ai-status {
+    position: absolute;
+    top: calc(var(--spacing-lg) + 50px);
+    left: var(--spacing-lg);
+    z-index: 100;
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+.ai-ready {
+    color: #4caf50;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+.ai-loading {
+    color: #ff9800;
+    animation: pulse 1.5s infinite;
+}
+
+/* Hit Feedback Animation */
+.hit-feedback {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+    pointer-events: none;
+    animation: hit-popup 0.5s ease-out forwards;
+}
+
+.hit-points {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ffeb3b;
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+}
+
+@keyframes hit-popup {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate(-50%, -70%) scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -80%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Game End Overlay */
+.game-end-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--spacing-xl);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.game-end-overlay h1 {
+    font-size: 3rem;
+    color: #ff4444;
+    margin-bottom: var(--spacing-xl);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.game-stats {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.game-end-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 400px;
+}
+
+.game-end-actions button {
+    flex: 1;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Safe area adjustments */
+@supports (padding: env(safe-area-inset-top)) {
+    .top-left-controls {
+        top: calc(var(--spacing-lg) + env(safe-area-inset-top));
+        left: calc(var(--spacing-lg) + env(safe-area-inset-left));
+    }
+
+    .top-right-controls {
+        top: calc(var(--spacing-lg) + env(safe-area-inset-top));
+        right: calc(var(--spacing-lg) + env(safe-area-inset-right));
+    }
+
+    .left-controls {
+        left: calc(var(--spacing-md) + env(safe-area-inset-left));
+    }
+
+    .right-controls {
+        right: calc(var(--spacing-md) + env(safe-area-inset-right));
+    }
+}

@@ -1,0 +1,57 @@
+.weapon-selector {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--spacing-md);
+    z-index: 10;
+}
+
+.weapon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md);
+    min-width: 70px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.weapon-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.weapon-btn.active {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: var(--weapon-color);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.weapon-icon {
+    font-size: 1.5rem;
+}
+
+.weapon-name {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.weapon-btn.active .weapon-name {
+    color: var(--weapon-color);
+}
+
+/* Safe area */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .weapon-selector {
+        bottom: calc(var(--spacing-xl) + env(safe-area-inset-bottom));
+    }
+}

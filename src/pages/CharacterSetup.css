@@ -1,0 +1,165 @@
+.character-setup-page {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.mode-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.mode-tab {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.mode-tab.active {
+    background: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+    color: white;
+}
+
+.setup-content {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+/* Photo Mode */
+.photo-upload-area {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--color-bg-tertiary);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: var(--spacing-lg);
+    transition: border-color var(--transition-fast);
+}
+
+.photo-upload-area:hover {
+    border-color: var(--color-accent-primary);
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--color-text-muted);
+}
+
+.upload-icon {
+    font-size: 2rem;
+}
+
+.photo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.supplement-section h3 {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Description Mode */
+.privacy-notice {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: var(--radius-sm);
+    color: var(--color-danger);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.current-team-info {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-md);
+    font-size: 0.9rem;
+}
+
+.current-team-info strong {
+    color: var(--color-accent-primary);
+}
+
+.description-form h3 {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-section h4 {
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-sm);
+}
+
+.form-label {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Checkbox */
+.checkbox-group {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-accent-primary);
+}
+
+.form-actions {
+    margin-top: var(--spacing-lg);
+}
+
+.form-actions .btn {
+    width: 100%;
+}

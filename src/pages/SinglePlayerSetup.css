@@ -1,0 +1,32 @@
+/* Reuse CreateRoom.css styles */
+@import './CreateRoom.css';
+
+.single-player-setup-page {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/PNG/modechoice_single.png') !important;
+}
+
+/* Additional styles for single player setup page */
+
+.mode-description {
+    margin-top: 8px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--primary-color, #4CAF50);
+    border-radius: 4px;
+}
+
+.mode-description p {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+}
+
+.mt-sm {
+    margin-top: 10px;
+}
+
+/* Custom time input */
+input[type="number"].input-field {
+    width: 100%;
+}

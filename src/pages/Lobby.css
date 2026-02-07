@@ -1,0 +1,131 @@
+.lobby-page {
+    min-height: 100vh;
+    width: 100%;
+    margin: 0 auto;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/PNG/playerlist.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: var(--spacing-md);
+}
+
+.team-section {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.team-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.team-name.referee {
+    color: var(--color-referee);
+}
+
+.team-name.team-a {
+    color: var(--color-team-a);
+}
+
+.team-name.team-b {
+    color: var(--color-team-b);
+}
+
+.btn-join {
+    background: var(--color-accent-primary);
+    color: white;
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    min-width: auto;
+}
+
+.player-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm);
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+}
+
+.player-item.current {
+    background: rgba(74, 124, 89, 0.2);
+    border-left: 3px solid var(--color-accent-primary);
+}
+
+.player-name {
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.host-badge {
+    color: #e67e22;
+    font-size: 0.8rem;
+    margin-left: var(--spacing-xs);
+}
+
+.permission-warning {
+    background: rgba(231, 76, 60, 0.2);
+    border: 1px solid #e74c3c;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+    color: #e74c3c;
+    font-size: 0.85rem;
+}
+
+
+.player-status {
+    font-size: 0.8rem;
+}
+
+.player-status.ready {
+    color: var(--color-ready);
+}
+
+.player-status.not-ready {
+    color: var(--color-not-ready);
+}
+
+.empty-slot {
+    padding: var(--spacing-sm);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.lobby-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.lobby-actions .btn {
+    width: 100%;
+}
+
+.lobby-actions .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

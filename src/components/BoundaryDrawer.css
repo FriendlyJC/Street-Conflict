@@ -1,0 +1,179 @@
+.boundary-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.boundary-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1001;
+}
+
+.boundary-title {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.point-count {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    font-weight: normal;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.save-btn {
+    background: #27ae60;
+    color: white;
+}
+
+.save-btn:hover:not(:disabled) {
+    background: #2ecc71;
+    transform: scale(1.1);
+}
+
+.save-btn:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.close-btn {
+    background: #e74c3c;
+    color: white;
+}
+
+.close-btn:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+}
+
+.boundary-map-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.boundary-bottom-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    z-index: 1001;
+}
+
+.tool-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pen-btn {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.pen-btn.active {
+    background: #e67e22;
+    border-color: #e67e22;
+    animation: pulse 1.5s infinite;
+}
+
+.pen-btn:hover {
+    transform: scale(1.05);
+}
+
+.clear-btn {
+    background: transparent;
+    color: white;
+    border-color: #e74c3c;
+}
+
+.clear-btn:hover:not(:disabled) {
+    background: #e74c3c;
+}
+
+.clear-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.instruction-text {
+    color: #ecf0f1;
+    font-size: 0.9rem;
+    margin-left: 20px;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.7);
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px rgba(230, 126, 34, 0);
+    }
+}
+
+/* Leaflet overrides */
+.boundary-drawer-overlay .leaflet-container {
+    background: #1a1a1a;
+}
+
+.boundary-drawer-overlay .leaflet-control-zoom {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.boundary-drawer-overlay .leaflet-control-zoom a {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.boundary-drawer-overlay .leaflet-control-zoom a:hover {
+    background: rgba(52, 152, 219, 0.8);
+}
