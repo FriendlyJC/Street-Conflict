@@ -31,7 +31,8 @@ function SinglePlayerGame() {
         cameraError,
         startCamera,
         stopCamera,
-        toggleCamera
+        toggleCamera,
+        applyHardwareZoom
     } = useCamera()
 
     const {
@@ -77,6 +78,21 @@ function SinglePlayerGame() {
     const [gameStarted, setGameStarted] = useState(false)
     const [gameEnded, setGameEnded] = useState(false)
     const [lastHitFeedback, setLastHitFeedback] = useState(null)
+    const [zoomMethod, setZoomMethod] = useState('software') // 'software' | 'hardware'
+
+    const toggleZoomMethod = useCallback(() => {
+        setZoomMethod(prev => {
+            const next = prev === 'software' ? 'hardware' : 'software'
+            console.log(`MediaPipe: 切換變焦模式至: ${next}`)
+            // 切換時強制回到該武器的最小倍率 (例如步槍 3x, 狙擊 10x)
+            setZoomLevel(zoomConfig.min)
+            // Reset hardware zoom when switching to software
+            if (next === 'software') {
+                applyHardwareZoom(1.0)
+            }
+            return next
+        })
+    }, [applyHardwareZoom, zoomConfig.min, setZoomLevel])
 
     // Handle reload
     const handleReload = useCallback(() => {
@@ -146,6 +162,27 @@ function SinglePlayerGame() {
         }
     }, [aimMode, cameraEnabled, cameraStream, selectedWeapon])
 
+    // Handle Hardware Zoom reset and Mode Defaulting
+    useEffect(() => {
+        if (!aimMode) {
+            // 當關閉瞄準時，確保硬體焦距回復預設
+            applyHardwareZoom(1.0)
+            setZoomMethod('software')
+        } else {
+            // 每次重新開鏡，都預設回軟體算法，避免打結
+            setZoomMethod('software')
+        }
+    }, [aimMode, applyHardwareZoom])
+
+    // Apply hardware zoom when needed
+    useEffect(() => {
+        if (zoomMethod === 'hardware' && cameraEnabled) {
+            applyHardwareZoom(zoomLevel)
+        } else if (zoomMethod === 'software' && cameraEnabled) {
+            applyHardwareZoom(1.0) // Reset to 1x
+        }
+    }, [zoomLevel, zoomMethod, cameraEnabled, applyHardwareZoom])
+
     // Canvas rendering for Scope (Visual only)
     useEffect(() => {
         if (aimMode !== 'scope' || !scopeCanvasRef.current || !videoRef.current) {
@@ -163,7 +200,9 @@ function SinglePlayerGame() {
                 return
             }
 
-            const sourceSize = Math.min(video.videoWidth, video.videoHeight) / zoomLevel
+            // 如果使用硬體變焦，則軟體層級的縮放倍率應固定為 1.0 (避免雙重放大)
+            const effectiveZoom = zoomMethod === 'hardware' ? 1.0 : zoomLevel
+            const sourceSize = Math.min(video.videoWidth, video.videoHeight) / effectiveZoom
             const sourceX = (video.videoWidth - sourceSize) / 2
             const sourceY = (video.videoHeight - sourceSize) / 2
 
@@ -281,6 +320,18 @@ function SinglePlayerGame() {
                     {cameraEnabled ? '📸' : '🚫'}
                 </button>
             </div>
+
+            {/* Settings Toggle - Only when aiming (Top Right) */}
+            {aimMode && (
+                <div className="top-right-controls">
+                    <button className={`control-btn settings-btn ${zoomMethod === 'hardware' ? 'active' : ''}`} onClick={toggleZoomMethod}>
+                        {zoomMethod === 'software' ? '⚙️' : '🦾'}
+                    </button>
+                    <div className="zoom-method-hint">
+                        {zoomMethod === 'hardware' ? '硬體變焦 (高畫質)' : '軟體變焦 (推薦)'}
+                    </div>
+                </div>
+            )}
 
             <div className="ai-status">
                 {isMediaPipeReady ? (

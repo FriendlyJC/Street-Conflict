@@ -98,7 +98,8 @@ class MediaPipeService {
 
             // 軀幹: 肩膀(11,12) 到 臀部(23,24)
             const torsoIndices = [11, 12, 13, 14, 15, 16, 23, 24]
-            const torso = this.getCustomBoundingBox(landmarks, torsoIndices, videoWidth, videoHeight, 0.02, VIS_THRESHOLD)
+            // 增加軀幹 Padding (0.05) 以消除與頭像及腿部的間隙
+            const torso = this.getCustomBoundingBox(landmarks, torsoIndices, videoWidth, videoHeight, 0.05, VIS_THRESHOLD)
 
             // 腿部: 25-32
             const legs = this.getBoundingBoxFromLandmarks(landmarks, 25, 32, videoWidth, videoHeight, 0.02, VIS_THRESHOLD)

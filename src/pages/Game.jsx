@@ -24,6 +24,7 @@ function Game() {
         stopCamera,
         toggleCamera,
         syncStreamToVideos,
+        applyHardwareZoom,
         setCameraEnabled
     } = useCamera()
 
@@ -63,6 +64,17 @@ function Game() {
 
     // Game-specific state
     const [showMiniMap, setShowMiniMap] = useState(false)
+    const [zoomMethod, setZoomMethod] = useState('software')
+
+    const toggleZoomMethod = useCallback(() => {
+        setZoomMethod(prev => {
+            const next = prev === 'software' ? 'hardware' : 'software'
+            console.log(`MediaPipe: (Multi) 切換變焦模式至: ${next}`)
+            setZoomLevel(zoomConfig.min)
+            if (next === 'software') applyHardwareZoom(1.0)
+            return next
+        })
+    }, [applyHardwareZoom, zoomConfig.min, setZoomLevel])
 
     // Wrap handleShoot to pass weapon type
     const handleShoot = useCallback(() => {
@@ -122,6 +134,25 @@ function Game() {
         }
     }, [aimMode, cameraEnabled, cameraStream, selectedWeapon, videoRef, videoZoomedRef])
 
+    // Handle Hardware Zoom reset and Mode Defaulting
+    useEffect(() => {
+        if (!aimMode) {
+            applyHardwareZoom(1.0)
+            setZoomMethod('software')
+        } else {
+            setZoomMethod('software')
+        }
+    }, [aimMode, applyHardwareZoom])
+
+    // Apply hardware zoom when needed
+    useEffect(() => {
+        if (zoomMethod === 'hardware' && cameraEnabled) {
+            applyHardwareZoom(zoomLevel)
+        } else if (zoomMethod === 'software' && cameraEnabled) {
+            applyHardwareZoom(1.0)
+        }
+    }, [zoomLevel, zoomMethod, cameraEnabled, applyHardwareZoom])
+
     // Canvas rendering for Scope (performance optimized)
     useEffect(() => {
         if (aimMode !== 'scope' || !scopeCanvasRef.current || !videoRef.current) {
@@ -140,7 +171,8 @@ function Game() {
             }
 
             // Calculate source region (center of video, scaled by zoom)
-            const sourceSize = Math.min(video.videoWidth, video.videoHeight) / zoomLevel
+            const effectiveZoom = zoomMethod === 'hardware' ? 1.0 : zoomLevel
+            const sourceSize = Math.min(video.videoWidth, video.videoHeight) / effectiveZoom
             const sourceX = (video.videoWidth - sourceSize) / 2
             const sourceY = (video.videoHeight - sourceSize) / 2
 
@@ -250,6 +282,18 @@ function Game() {
                     {cameraEnabled ? '📸' : '🚫'}
                 </button>
             </div>
+
+            {/* Settings Toggle - Only when aiming (Top Right) */}
+            {aimMode && (
+                <div className="top-right-controls">
+                    <button className={`control-btn settings-btn ${zoomMethod === 'hardware' ? 'active' : ''}`} onClick={toggleZoomMethod}>
+                        {zoomMethod === 'software' ? '⚙️' : '🦾'}
+                    </button>
+                    <div className="zoom-method-hint">
+                        {zoomMethod === 'hardware' ? '硬體變焦 (高畫質)' : '軟體變焦 (推薦)'}
+                    </div>
+                </div>
+            )}
 
             {/* Real-time mini map - always available if we have GPS, even if camera is off */}
             {!aimMode && (

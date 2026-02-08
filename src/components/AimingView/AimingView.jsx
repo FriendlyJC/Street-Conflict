@@ -9,8 +9,14 @@ function AimingView({ weapon, mode, zoomLevel, onZoomChange, zoomConfig, focusMo
     const [imageSrc, setImageSrc] = useState('')
     const [imageError, setImageError] = useState(false)
     const [formatIndex, setFormatIndex] = useState(0)
+    const [brightness, setBrightness] = useState(1.0)
 
     const formats = ['png', 'jpg', 'jpeg', 'webp', 'gif']
+
+    // Sync brightness to CSS variable
+    useEffect(() => {
+        document.documentElement.style.setProperty('--scene-brightness', brightness)
+    }, [brightness])
 
     // Get scope image base path based on weapon, mode, and focus
     const getScopeBasePath = () => {
@@ -74,21 +80,40 @@ function AimingView({ weapon, mode, zoomLevel, onZoomChange, zoomConfig, focusMo
 
     return (
         <div className="aiming-view" onClick={onToggleFocus}>
-            {/* Zoom slider for scoped weapons - LEFT SIDE */}
-            {mode === 'scope' && zoomConfig.max > zoomConfig.min && (
-                <div className="zoom-control left" onClick={(e) => e.stopPropagation()}>
-                    <span className="zoom-label">{zoomConfig.max}x</span>
-                    <input
-                        type="range"
-                        min={zoomConfig.min}
-                        max={zoomConfig.max}
-                        step="0.1"
-                        value={zoomLevel}
-                        onChange={(e) => onZoomChange(parseFloat(e.target.value))}
-                        className="zoom-slider"
-                        orient="vertical"
-                    />
-                    <span className="zoom-label">{zoomConfig.min}x</span>
+            {/* Control Group - LEFT SIDE */}
+            {mode === 'scope' && (
+                <div className="left-controls-group" onClick={(e) => e.stopPropagation()}>
+                    {/* Brightness Control */}
+                    <div className="brightness-control">
+                        <span className="control-icon">☀️</span>
+                        <input
+                            type="range"
+                            min="0.5"
+                            max="1.5"
+                            step="0.05"
+                            value={brightness}
+                            onChange={(e) => setBrightness(parseFloat(e.target.value))}
+                            className="vertical-slider brightness-slider"
+                        />
+                    </div>
+
+                    {/* Zoom Control */}
+                    {zoomConfig.max > zoomConfig.min && (
+                        <div className="zoom-control">
+                            <span className="zoom-label">{zoomConfig.max}x</span>
+                            <input
+                                type="range"
+                                min={zoomConfig.min}
+                                max={zoomConfig.max}
+                                step="0.1"
+                                value={zoomLevel}
+                                onChange={(e) => onZoomChange(parseFloat(e.target.value))}
+                                className="vertical-slider zoom-slider"
+                                orient="vertical"
+                            />
+                            <span className="zoom-label">{zoomConfig.min}x</span>
+                        </div>
+                    )}
                 </div>
             )}
 

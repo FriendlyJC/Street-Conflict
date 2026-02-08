@@ -13,6 +13,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    filter: brightness(var(--scene-brightness, 1.0));
 }
 
 .camera-container.disabled {
@@ -333,24 +334,13 @@
     font-size: 1rem;
 }
 
-.zoom-control {
-    position: absolute;
-    left: var(--spacing-lg);
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-sm);
-    pointer-events: auto;
-    z-index: 70;
-}
-
-.zoom-label {
-    color: white;
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+/* Shoot button in scope mode */
+.scope-shoot-btn {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 .zoom-slider {
@@ -475,6 +465,29 @@
     display: flex;
     gap: var(--spacing-md);
     z-index: 100;
+    pointer-events: none;
+}
+
+/* Settings Button */
+.settings-btn {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.settings-btn.active {
+    border-color: #2ecc71;
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.2);
+}
+
+.zoom-method-hint {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     pointer-events: none;
 }
 

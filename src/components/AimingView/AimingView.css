@@ -3,5 +3,127 @@
 /* This file is for any component-specific overrides if needed */
 
 .aiming-view {
-    /* Inherits styles from Game.css */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+/* Control Group - Stacked on the left */
+.aiming-view .left-controls-group {
+    position: absolute;
+    left: var(--spacing-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid !important;
+    grid-template-columns: 1fr;
+    place-items: center;
+    width: fit-content;
+    gap: var(--spacing-md);
+    z-index: 100;
+    pointer-events: auto;
+}
+
+/* Glassmorphism Styles for Containers */
+.brightness-control,
+.zoom-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.zoom-label,
+.control-icon {
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.control-icon {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+/* Reusable Vertical Slider Styling */
+.vertical-slider {
+    -webkit-appearance: slider-vertical;
+    appearance: slider-vertical;
+    width: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    outline: none;
+}
+
+.brightness-slider {
+    height: 80px;
+}
+
+.zoom-slider {
+    height: 120px;
+}
+
+.vertical-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 2px solid #2ecc71;
+    /* Accent color for the thumb */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
+.vertical-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 2px solid #2ecc71;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
+/* Existing styles below for scope image positioning */
+.scope-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.scope-image.scope-centered {
+    object-fit: contain;
+    object-position: center center;
+}
+
+.scope-image.scope-bottom {
+    object-fit: contain;
+    object-position: center bottom;
+}
+
+.scope-placeholder {
+    width: 80%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
 }

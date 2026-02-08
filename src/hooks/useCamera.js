@@ -95,6 +95,40 @@ export function useCamera() {
         }
     }, [cameraStream])
 
+    /**
+     * 套用硬體變焦 (Hardware Zoom)
+     * @param {number} zoomValue - 變焦倍率 (例如 1.0, 3.0, 10.0)
+     * @returns {Promise<boolean>} 是否套用成功
+     */
+    const applyHardwareZoom = useCallback(async (zoomValue) => {
+        if (!cameraStream) return false
+
+        const track = cameraStream.getVideoTracks()[0]
+        if (!track) return false
+
+        try {
+            const capabilities = track.getCapabilities()
+            if (!capabilities.zoom) {
+                console.warn('MediaPipe: 當前相機硬體不支援變焦')
+                return false
+            }
+
+            // 限制在硬體支援範圍內
+            const min = capabilities.zoom.min || 1
+            const max = capabilities.zoom.max || 1
+            const clampedZoom = Math.min(Math.max(zoomValue, min), max)
+
+            console.log(`MediaPipe: 嘗試套用硬體變焦: ${clampedZoom}x (範圍: ${min}-${max})`)
+            await track.applyConstraints({
+                advanced: [{ zoom: clampedZoom }]
+            })
+            return true
+        } catch (err) {
+            console.error('MediaPipe: 硬體變焦套用失敗', err)
+            return false
+        }
+    }, [cameraStream])
+
     return {
         // Refs
         videoRef,
@@ -109,6 +143,7 @@ export function useCamera() {
         stopCamera,
         toggleCamera,
         syncStreamToVideos,
+        applyHardwareZoom,
         setCameraEnabled
     }
 }
