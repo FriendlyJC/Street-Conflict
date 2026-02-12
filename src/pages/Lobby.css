@@ -129,3 +129,13 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.btn-danger {
+    background: #e74c3c !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-danger:active {
+    background: #c0392b !important;
+}

@@ -141,8 +141,14 @@ function Lobby() {
 
     const handleStartGame = () => {
         if (allPlayersReady()) {
-            navigate(`/game/${roomId}`)
+            alert("遊戲尚在開發中，敬請期待！")
+            // navigate(`/game/${roomId}`) // 暫時註解，待多人連線邏輯串接完成
         }
+    }
+
+    const handleLeaveRoom = () => {
+        // TODO: Socket leave notification
+        navigate('/multiplayer')
     }
 
     // Check if current player is ready
@@ -264,12 +270,23 @@ function Lobby() {
                         設定外觀
                     </button>
                 )}
+
+                {/* 僅房主可見開始按鈕 */}
+                {currentPlayer.isHost && (
+                    <button
+                        className="btn btn-primary"
+                        onClick={handleStartGame}
+                        disabled={!allPlayersReady()}
+                    >
+                        開始遊戲
+                    </button>
+                )}
+
                 <button
-                    className="btn btn-primary"
-                    onClick={handleStartGame}
-                    disabled={!allPlayersReady()}
+                    className="btn btn-danger"
+                    onClick={handleLeaveRoom}
                 >
-                    開始遊戲
+                    退出房間
                 </button>
             </div>
         </div>

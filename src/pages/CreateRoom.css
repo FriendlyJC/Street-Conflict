@@ -63,3 +63,27 @@
     border-radius: 4px;
     text-align: center;
 }
+
+/* Custom Time Inputs */
+.custom-time-inputs {
+    margin-top: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-input-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+}
+
+.small-input {
+    width: 60px !important;
+    padding: var(--spacing-xs) !important;
+    text-align: center;
+}

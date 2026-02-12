@@ -7,9 +7,9 @@ import AimingView from '../components/AimingView/AimingView'
 import AIResultPortal from '../components/AIResultPortal/AIResultPortal'
 import { useCamera, useGPS, useDeviceOrientation, useWeapon, useShooting } from '../hooks'
 import MediaPipeService from '../services/MediaPipeService'
-import './Game.css'
+import '../pages/Game.css'
 
-function SinglePlayerGame() {
+function Single_RandomKill() {
     const navigate = useNavigate()
     const location = useLocation()
     const canvasRef = useRef(null)
@@ -32,7 +32,11 @@ function SinglePlayerGame() {
         startCamera,
         stopCamera,
         toggleCamera,
-        applyHardwareZoom
+        applyHardwareZoom,
+        zoomMethod,
+        toggleZoomMethod,
+        setZoomMethod,
+        syncStreamToVideos
     } = useCamera()
 
     const {
@@ -78,21 +82,6 @@ function SinglePlayerGame() {
     const [gameStarted, setGameStarted] = useState(false)
     const [gameEnded, setGameEnded] = useState(false)
     const [lastHitFeedback, setLastHitFeedback] = useState(null)
-    const [zoomMethod, setZoomMethod] = useState('software') // 'software' | 'hardware'
-
-    const toggleZoomMethod = useCallback(() => {
-        setZoomMethod(prev => {
-            const next = prev === 'software' ? 'hardware' : 'software'
-            console.log(`MediaPipe: 切換變焦模式至: ${next}`)
-            // 切換時強制回到該武器的最小倍率 (例如步槍 3x, 狙擊 10x)
-            setZoomLevel(zoomConfig.min)
-            // Reset hardware zoom when switching to software
-            if (next === 'software') {
-                applyHardwareZoom(1.0)
-            }
-            return next
-        })
-    }, [applyHardwareZoom, zoomConfig.min, setZoomLevel])
 
     // Handle reload
     const handleReload = useCallback(() => {
@@ -149,18 +138,10 @@ function SinglePlayerGame() {
     // Restart camera on aim mode change
     useEffect(() => {
         if (cameraEnabled && cameraStream) {
-            const restartCamera = async () => {
-                await new Promise(resolve => setTimeout(resolve, 100))
-                if (videoRef.current && cameraStream) {
-                    videoRef.current.srcObject = cameraStream
-                }
-                if (aimMode === 'scope' && selectedWeapon !== 'sniper' && videoZoomedRef.current) {
-                    videoZoomedRef.current.srcObject = cameraStream
-                }
-            }
-            restartCamera()
+            // 使用 Hook 提供的同步功能確保新掛載的元素都接到串流
+            syncStreamToVideos()
         }
-    }, [aimMode, cameraEnabled, cameraStream, selectedWeapon])
+    }, [aimMode, cameraEnabled, cameraStream, selectedWeapon, syncStreamToVideos])
 
     // Handle Hardware Zoom reset and Mode Defaulting
     useEffect(() => {
@@ -172,16 +153,25 @@ function SinglePlayerGame() {
             // 每次重新開鏡，都預設回軟體算法，避免打結
             setZoomMethod('software')
         }
-    }, [aimMode, applyHardwareZoom])
+    }, [aimMode, applyHardwareZoom, setZoomMethod])
 
-    // Apply hardware zoom when needed
+    // Apply hardware zoom when needed (Sync logic remains here as it depends on both hooks)
     useEffect(() => {
-        if (zoomMethod === 'hardware' && cameraEnabled) {
+        if (!cameraEnabled) return
+
+        if (zoomMethod === 'hardware') {
             applyHardwareZoom(zoomLevel)
-        } else if (zoomMethod === 'software' && cameraEnabled) {
-            applyHardwareZoom(1.0) // Reset to 1x
+        } else {
+            applyHardwareZoom(1.0)
         }
     }, [zoomLevel, zoomMethod, cameraEnabled, applyHardwareZoom])
+
+    // Reset Hardware Zoom specifically when exiting aim mode
+    useEffect(() => {
+        if (!aimMode) {
+            applyHardwareZoom(1.0)
+        }
+    }, [aimMode, applyHardwareZoom])
 
     // Canvas rendering for Scope (Visual only)
     useEffect(() => {
@@ -200,7 +190,7 @@ function SinglePlayerGame() {
                 return
             }
 
-            // 如果使用硬體變焦，則軟體層級的縮放倍率應固定為 1.0 (避免雙重放大)
+            // 如果使用硬體變焦，則軟體層級的縮放倍率應固定為 1.0
             const effectiveZoom = zoomMethod === 'hardware' ? 1.0 : zoomLevel
             const sourceSize = Math.min(video.videoWidth, video.videoHeight) / effectiveZoom
             const sourceX = (video.videoWidth - sourceSize) / 2
@@ -223,25 +213,44 @@ function SinglePlayerGame() {
                 cancelAnimationFrame(animationId)
             }
         }
-    }, [aimMode, zoomLevel, selectedWeapon, scopeCanvasRef, videoRef])
+    }, [aimMode, zoomLevel, selectedWeapon, scopeCanvasRef, videoRef, zoomMethod])
+
+    const handleToggleZoom = useCallback(() => {
+        toggleZoomMethod()
+        // 切換時強制回到該武器的最小倍率
+        setZoomLevel(zoomConfig.min)
+    }, [toggleZoomMethod, setZoomLevel, zoomConfig.min])
 
     const handleShoot = useCallback(async () => {
         if (gameEnded || !isMediaPipeReady) return
 
         setShotCount(prev => prev + 1)
 
+        // 如果使用硬體變焦，拍照擷取時就不需要再進行軟體放大
+        const effectiveZoom = zoomMethod === 'hardware' ? 1.0 : zoomLevel
+
         await triggerShoot({
             weapon: selectedWeapon,
             aimMode: aimMode,
-            zoomLevel: zoomLevel,
-            onHit: (points) => {
+            zoomLevel: effectiveZoom,
+            onHit: ({ isHeadshot, weapon: hitWeapon }) => {
                 setHitCount(prev => prev + 1)
+
+                // 單人隨機殺戮模式：計分規則與特效
+                const scoreMap = { sniper: 100, rifle: 50, shotgun: 30 }
+                let points = scoreMap[hitWeapon] || 50
+
+                if (isHeadshot) {
+                    points *= 2
+                    console.log('HEADSHOT!')
+                }
+
                 setScore(prev => prev + points)
                 setLastHitFeedback({ points, timestamp: Date.now() })
                 setTimeout(() => setLastHitFeedback(null), 1000)
             }
         })
-    }, [gameEnded, isMediaPipeReady, triggerShoot, selectedWeapon, aimMode, zoomLevel])
+    }, [gameEnded, isMediaPipeReady, triggerShoot, selectedWeapon, aimMode, zoomLevel, zoomMethod])
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60)
@@ -324,7 +333,7 @@ function SinglePlayerGame() {
             {/* Settings Toggle - Only when aiming (Top Right) */}
             {aimMode && (
                 <div className="top-right-controls">
-                    <button className={`control-btn settings-btn ${zoomMethod === 'hardware' ? 'active' : ''}`} onClick={toggleZoomMethod}>
+                    <button className={`control-btn settings-btn ${zoomMethod === 'hardware' ? 'active' : ''}`} onClick={handleToggleZoom}>
                         {zoomMethod === 'software' ? '⚙️' : '🦾'}
                     </button>
                     <div className="zoom-method-hint">
@@ -408,4 +417,4 @@ function SinglePlayerGame() {
     )
 }
 
-export default SinglePlayerGame
+export default Single_RandomKill

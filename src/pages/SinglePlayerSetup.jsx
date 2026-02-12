@@ -58,19 +58,26 @@ function SinglePlayerSetup() {
             duration = customTimeInput ? parseInt(customTimeInput.value) || 15 : 15
         }
 
-        // Random Kill mode is ready, others are under development
-        if (formData.gameMode === 'random_kill') {
-            navigate('/singleplayer/game', {
+        // Map internal gameMode to route paths
+        const modeRoutes = {
+            'random_kill': 'randomkill',
+            'zombie': 'zombie',
+            'tower_defense': 'td'
+        }
+
+        const routePath = modeRoutes[formData.gameMode]
+
+        if (routePath) {
+            navigate(`/singleplayer/game/${routePath}`, {
                 state: {
-                    mode: 'randomKill',
+                    mode: formData.gameMode === 'random_kill' ? 'randomKill' : formData.gameMode,
                     mapSize: formData.mapSize,
                     duration: duration,
                     customBoundary: customBoundary
                 }
             })
         } else {
-            // Other modes are under development
-            alert('此遊戲模式開發中，請稍後！')
+            alert('此遊戲模式路徑未定義！')
         }
     }
 

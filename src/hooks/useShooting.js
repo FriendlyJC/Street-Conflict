@@ -122,27 +122,28 @@ export function useShooting(videoRef, canvasRef) {
             playSound('hit')
             localStorage.setItem('streetconflict_hit_img', canvas.toDataURL('image/jpeg', 0.9))
 
-            const scoreMap = { sniper: 100, rifle: 50, shotgun: 30 }
-            let points = scoreMap[weapon] || 50
-
-            // 爆頭獎勵判定
+            // 爆頭判定邏輯
             const isHeadshot = hitResult.hitPoints.some(pt => {
                 const person = people[pt.personIndex]
                 if (!person || !person.parts.head) return false
                 const h = person.parts.head
+                // 使用零件的正規化座標進行檢查
                 return pt.x >= h.normalizedX && pt.x <= h.normalizedX + h.normalizedWidth &&
-                    pt.y >= h.normalizedY && pt.y <= h.normalizedY + h.normalizedWidth
+                    pt.y >= h.normalizedY && pt.y <= h.normalizedY + h.normalizedHeight
             })
 
-            if (isHeadshot) {
-                points *= 2
-                console.log('HEADSHOT!')
+            // 回傳命中詳細資料，讓呼叫者處理分數與特效
+            if (onHit) {
+                onHit({
+                    isHeadshot,
+                    weapon,
+                    hitResult,
+                    people
+                })
             }
-
-            if (onHit) onHit(points)
         }
 
-        return hitResult
+        return { hitResult, people }
     }, [videoRef, canvasRef, playSound, showShootFeedback, generateDebugImages])
 
     return {
