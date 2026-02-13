@@ -126,6 +126,27 @@
     transform: scale(1.05);
 }
 
+.spawn-btn {
+    background: #9b59b6;
+    color: white;
+    border-color: #9b59b6;
+}
+
+.spawn-btn.active {
+    background: #e67e22;
+    border-color: #e67e22;
+    animation: pulse 1.5s infinite;
+}
+
+.spawn-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+}
+
+.spawn-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
 .clear-btn {
     background: transparent;
     color: white;
@@ -176,4 +197,10 @@
 
 .boundary-drawer-overlay .leaflet-control-zoom a:hover {
     background: rgba(52, 152, 219, 0.8);
+}
+
+/* Spawn point labels */
+.spawn-point-label {
+    background: transparent !important;
+    border: none !important;
 }

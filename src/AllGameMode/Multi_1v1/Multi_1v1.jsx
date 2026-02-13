@@ -1,16 +1,16 @@
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import '../pages/Game.css'
+import '../../pages/Game.css'
 
-function Multi_CQB() {
+function Multi_1v1() {
     const navigate = useNavigate()
     const { roomId } = useParams()
 
     return (
         <div className="game-page">
             <div className="game-end-overlay">
-                <h1>🏠 室內近戰 CQB (Room: {roomId})</h1>
-                <p>開發中：狹小空間內的生死決戰...</p>
+                <h1>🗡️ 多人單挑 (Room: {roomId})</h1>
+                <p>開發中：1 對 1 的男人決鬥...</p>
                 <div className="game-end-actions">
                     <button className="btn btn-secondary" onClick={() => navigate('/multiplayer')}>返回</button>
                 </div>
@@ -19,4 +19,4 @@ function Multi_CQB() {
     )
 }
 
-export default Multi_CQB
+export default Multi_1v1

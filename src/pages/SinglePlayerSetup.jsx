@@ -62,7 +62,7 @@ function SinglePlayerSetup() {
         const modeRoutes = {
             'random_kill': 'randomkill',
             'zombie': 'zombie',
-            'tower_defense': 'td'
+            'survival': 'survival'
         }
 
         const routePath = modeRoutes[formData.gameMode]
@@ -96,7 +96,7 @@ function SinglePlayerSetup() {
                     >
                         <option value="random_kill">隨機殺戮</option>
                         <option value="zombie">殭屍模式</option>
-                        <option value="tower_defense">守塔模式</option>
+                        <option value="survival">生存模式</option>
                     </select>
                     <div className="mode-description">
                         {formData.gameMode === 'random_kill' && (
@@ -105,8 +105,8 @@ function SinglePlayerSetup() {
                         {formData.gameMode === 'zombie' && (
                             <p>地圖上會隨機生成武器、建造資源及殭屍，殭屍會自動靠近攻擊玩家，確保在殭屍末日下活下去</p>
                         )}
-                        {formData.gameMode === 'tower_defense' && (
-                            <p>以玩家初始中心為主塔，抵禦一波波攻擊的敵人</p>
+                        {formData.gameMode === 'survival' && (
+                            <p>使用遊戲幣購買武器與道具，在地圖上生存並完成任務</p>
                         )}
                     </div>
                 </div>

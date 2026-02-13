@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import WeaponCarousel from '../components/WeaponCarousel'
-import GameMiniMap from '../components/GameMiniMap'
-import MiniMapOverlay from '../components/MiniMapOverlay'
-import AimingView from '../components/AimingView/AimingView'
-import AIResultPortal from '../components/AIResultPortal/AIResultPortal'
-import { useCamera, useGPS, useDeviceOrientation, useWeapon, useShooting } from '../hooks'
-import MediaPipeService from '../services/MediaPipeService'
-import '../pages/Game.css'
+import WeaponCarousel from '../../components/WeaponCarousel'
+import BigMapForAll from '../../components/BigMapForAll'
+import MiniMapOverlay from '../../components/MiniMapOverlay'
+import AimingView from '../../components/AimingView/AimingView'
+import AIResultPortal from '../../components/AIResultPortal/AIResultPortal'
+import { useCamera, useGPS, useDeviceOrientation, useWeapon, useShooting } from '../../hooks'
+import MediaPipeService from '../../services/MediaPipeService'
+import '../../pages/Game.css'
 
 function Single_RandomKill() {
     const navigate = useNavigate()
@@ -41,6 +41,9 @@ function Single_RandomKill() {
 
     const {
         playerPosition,
+        gpsPermission,
+        startGPSTracking,
+        stopGPSTracking,
         loadGPSPosition
     } = useGPS()
 
@@ -106,13 +109,14 @@ function Single_RandomKill() {
         if (cameraEnabled) {
             startCamera()
         }
-        loadGPSPosition()
-        const gpsInterval = setInterval(loadGPSPosition, 1000)
+
+        // Start GPS tracking (will request permission)
+        startGPSTracking()
         startOrientationListener()
 
         return () => {
             stopCamera()
-            clearInterval(gpsInterval)
+            stopGPSTracking()
             stopOrientationListener()
         }
     }, [])
@@ -402,10 +406,9 @@ function Single_RandomKill() {
             </>
 
             {showMiniMap && (
-                <GameMiniMap
+                <BigMapForAll
                     onClose={() => setShowMiniMap(false)}
                     playerPosition={playerPosition ? { ...playerPosition, heading: deviceHeading !== null ? deviceHeading : playerPosition.heading } : null}
-                    currentPlayerRole="player"
                     onRequestCompass={requestCompassPermission}
                     hasHeading={deviceHeading !== null}
                 />

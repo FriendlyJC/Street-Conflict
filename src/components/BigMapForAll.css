@@ -1,0 +1,183 @@
+.game-minimap-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-bg-primary);
+    z-index: var(--z-overlay);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Close button */
+.minimap-close-btn {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    width: 40px;
+    height: 40px;
+    background: rgba(231, 76, 60, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Map Header */
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--color-bg-secondary);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    gap: var(--spacing-md);
+}
+
+.room-info {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.gps-status {
+    color: #2ecc71;
+}
+
+.gps-status.loading {
+    color: #f39c12;
+    animation: pulse 1s infinite;
+}
+
+/* Compass Button */
+.compass-btn {
+    position: absolute;
+    top: 60px;
+    left: var(--spacing-lg);
+    z-index: 1000;
+    background: rgba(44, 62, 80, 0.9);
+    border: 2px solid #34495e;
+    color: white;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.compass-btn.active {
+    background: rgba(39, 174, 96, 0.9);
+    border-color: #2ecc71;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
+}
+
+.compass-btn .icon {
+    font-size: 1.25rem;
+}
+
+.compass-btn .text {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Map Container */
+.map-container {
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Player marker styles */
+.player-marker-icon {
+    background: transparent !important;
+    border: none !important;
+}
+
+.player-marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+
+.player-marker-arrow {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 8px solid currentColor;
+}
+
+/* Legend */
+.map-legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.legend-dot.self {
+    background: #f1c40f;
+}
+
+.legend-dot.teammate {
+    background: #3498db;
+}
+
+/* Safe area */
+@supports (padding: env(safe-area-inset-top)) {
+    .minimap-close-btn {
+        top: calc(var(--spacing-lg) + env(safe-area-inset-top));
+    }
+
+    .map-header {
+        padding-top: calc(var(--spacing-md) + env(safe-area-inset-top));
+    }
+
+    .map-legend {
+        padding-bottom: calc(var(--spacing-sm) + env(safe-area-inset-bottom));
+    }
+}
+
+/* Override Leaflet styles for dark theme */
+.leaflet-container {
+    background: #1a1a1a;
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-md);
+}
+
+.leaflet-popup-tip {
+    background: var(--color-bg-secondary);
+}

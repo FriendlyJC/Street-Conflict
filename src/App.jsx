@@ -9,15 +9,15 @@ import CharacterSetup from './pages/CharacterSetup'
 import PasswordGuard from './components/PasswordGuard/PasswordGuard'
 
 // Game Modes from AllGameMode
-import Single_RandomKill from './AllGameMode/Single_RandomKill'
-import Single_Zombie from './AllGameMode/Single_Zombie'
-import Single_TD from './AllGameMode/Single_TD'
-import Multi_Team from './AllGameMode/Multi_Team'
-import Multi_Boam from './AllGameMode/Multi_Boam'
-import Multi_Hostage from './AllGameMode/Multi_Hostage'
-import Multi_CQB from './AllGameMode/Multi_CQB'
-import Multi_1v1 from './AllGameMode/Multi_1v1'
-import Multi_LS from './AllGameMode/Multi_LS'
+import Single_RandomKill from './AllGameMode/Single_RandomKill/Single_RandomKill'
+import Single_Zombie from './AllGameMode/Single_Zombie/Single_Zombie'
+import Single_TD from './AllGameMode/Single_TD/Single_TD'
+import Multi_Team from './AllGameMode/Multi_Team/Multi_Team'
+import Multi_Boam from './AllGameMode/Multi_Boam/Multi_Boam'
+import Multi_Hostage from './AllGameMode/Multi_Hostage/Multi_Hostage'
+import Multi_CQB from './AllGameMode/Multi_CQB/Multi_CQB'
+import Multi_1v1 from './AllGameMode/Multi_1v1/Multi_1v1'
+import Multi_LS from './AllGameMode/Multi_LS/Multi_LS'
 
 function App() {
     return (

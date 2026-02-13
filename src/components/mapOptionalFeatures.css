@@ -1,0 +1,57 @@
+/* Call Referee Button */
+.call-referee-btn {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(241, 196, 15, 0.9);
+    border: 2px solid #f39c12;
+    border-radius: 20px;
+    color: #000;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.call-referee-btn .icon {
+    font-size: 1.2rem;
+}
+
+.call-referee-btn:hover {
+    background: rgba(241, 196, 15, 1);
+    transform: translateX(-50%) scale(1.05);
+}
+
+.call-referee-btn.active {
+    background: #e74c3c;
+    border-color: #c0392b;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+}
+
+.call-referee-btn.active:hover {
+    background: rgba(231, 76, 60, 1);
+}
+
+/* Legend dots for optional features */
+.legend-dot.referee {
+    background: #2ecc71;
+}
+
+.legend-dot.enemy {
+    background: #e74c3c;
+}
+
+.legend-dot.zone-red {
+    background: #e74c3c;
+}
+
+.legend-dot.zone-blue {
+    background: #3498db;
+}
